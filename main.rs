@@ -43,6 +43,8 @@ fn handlenew() {
     write!(output, "Name: {}", nam.clone()).expect("Error while writing name");
     write!(output, "Phone: {}", pho.clone()).expect("Error while writing phone");
     write!(output, "Address: {}", add.clone()).expect("Error while writing address");
+
+    println!("\nAdded {}", nam);
 }
 
 fn handleview() {
@@ -77,6 +79,8 @@ fn handleremove() {
     let path = &*pathinit; // change back into &str
 
     fs::remove_file(path).expect("Error while removing file");
+
+    println!("\nRemoved {}", name);
 }
 
 fn handlelist() {
