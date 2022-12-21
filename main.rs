@@ -98,7 +98,7 @@ fn handlelist() {
 
 
 fn main() {
-    println!("PEER SUPPORT DATABASE\n-----------------");
+    println!("SIMPLE DATABASE - Marktime\n-----------------");
 
     // MAIN LOOP
     loop {
