@@ -1,3 +1,5 @@
+extern crate colored;
+
 use std::io;
 use std::io::{Write, BufReader, BufRead};
 use std::fs::File;
@@ -10,7 +12,8 @@ fn printhelp() {
     println!("New - Creates a new person, requires: name, phone number, and address. If one of these values is unknown, put in 'Unknown'.");
     println!("View - Allows you to view a person by inputting the name.");
     println!("Delete - Removes a person from the database by inputting the name.");
-    println!("List - Lists all people saved to the database.")
+    println!("List - Lists all people saved to the database.");
+    println!("Clearlist - Deletes all saved people, requires confirmation");
 }
 
 fn handlenew() {
@@ -90,15 +93,40 @@ fn handlelist() {
     println!("----------------------");
     for file in fs::read_dir("").unwrap() {
         let file = file.unwrap().path();
-        if file.extension().unwrap().to_str() == Some("txt") {
+        if file.extension().unwrap().to_str().unwrap() == "txt" {
             println!("{}", file.file_name().unwrap().to_str().unwrap().trim_end_matches(".txt"));
         }
     }
 }
 
+fn handleclearlist() {
+    println!(" ");
+
+    let mut uip = String::new();
+    println!("Are you sure? Y/N:");
+    io::stdin().read_line(&mut uip).expect("Error while reading confirmation");
+    let uip = uip.trim_end();
+
+    fn clearall() {
+        for file in fs::read_dir("").unwrap() {
+            let file = file.unwrap().path();
+            if file.extension().unwrap().to_str().unwrap() == "txt" {
+                fs::remove_file(file.as_path()).expect("Error while removing file");
+            }
+        }
+    }
+
+    if uip.to_ascii_lowercase() == "y" {
+        clearall();
+        println!("\nCleared all data");
+    } else {
+        println!("Canceled request to clear");
+    }
+}
+
 
 fn main() {
-    println!("SIMPLE DATABASE - Marktime\n-----------------");
+    println!("Simple Database - Marktime\n-----------------");
 
     // MAIN LOOP
     loop {
@@ -112,6 +140,7 @@ fn main() {
         let view = "view".to_string();
         let remove = "delete".to_string();
         let list = "list".to_string();
+        let clearlist = "clearlist".to_string();
 
         if uip.trim_end().to_ascii_lowercase() == help {
             printhelp();
@@ -123,6 +152,8 @@ fn main() {
             handleremove();            
         } else if uip.trim_end().to_ascii_lowercase() == list {
             handlelist();
+        } else if uip.trim_end().to_ascii_lowercase() == clearlist{
+            handleclearlist();
         } else {
             println!("Command entered not valid");
         }
